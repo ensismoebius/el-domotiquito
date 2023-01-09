@@ -18,6 +18,18 @@ void abrirPaginaPrincipal() {
   server.send(200, "text/html", html);
 }
 
+void alternarDebug() {
+  String parametro = server.arg("debug");
+
+  if (parametro == "true") {
+    enviarParaOArduino(Ativacoes::debug_on);
+    server.send(200, "text/plane", "Debug ativado");
+  } else {
+    enviarParaOArduino(Ativacoes::debug_off);
+    server.send(200, "text/plane", "Debug desativado");
+  }
+}
+
 void alternarRega() {
   String parametro = server.arg("ativacao");
 
@@ -34,19 +46,20 @@ void atribuirIntervaloEmHoras() {
   int intervaloEmHoras = server.arg("hours").toInt();
   String parametro = String(intervaloEmHoras);
 
-  server.send(200, "text/plane", parametro);
   enviarParaOArduino(Ativacoes::atribuir_horas_ate_proxima_rega, parametro);
+  server.send(200, "text/plane", parametro);
 }
 
 void atribuirTempoDeRegaEmMinutos() {
   int tempoEmMinutos = server.arg("minutes").toInt();
   String parametro = String(tempoEmMinutos);
 
-  server.send(200, "text/plane", parametro);
   enviarParaOArduino(Ativacoes::atribuir_minutos_de_rega, parametro);
+  server.send(200, "text/plane", parametro);
 }
 
 void recuperarStatus() {
+  enviarParaOArduino(Ativacoes::status);
   server.send(200, "text/plane", "Regando: 1 Proxima rega: 2h");
 }
 
@@ -70,8 +83,9 @@ inline void configurarWifi() {
 
 inline void configurarServidorWeb() {
   server.on("/", abrirPaginaPrincipal);
+  server.on("/status", recuperarStatus);
   server.on("/ledToggle", alternarRega);
-  server.on("/Ativacoes", recuperarStatus);
+  server.on("/alternarDebug", alternarDebug);
   server.on("/interval", atribuirIntervaloEmHoras);
   server.on("/mintime", atribuirTempoDeRegaEmMinutos);
   server.begin();

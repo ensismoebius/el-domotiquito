@@ -85,6 +85,12 @@ const char paginaInicial[] PROGMEM = R"=====(
                 <span class="slider round"></span>
             </label>
             <br/>
+            <label><span id="debug">Sem debug</span></label><br/>
+            <label class="switch">
+                <input type="checkbox" name="ligaDebug" onchange="toggleDebug(this.checked)">
+                <span class="slider round"></span>
+            </label>
+            <br/>
             <label for="tempoMinimoDeRega">Tempo de rega em minutos</label><br/>
             <input type="number" name="tempoMinimoDeRega" id="tempoMinimoDeRega" value="15" onchange="setMinTime(this.value)">
             <br/>
@@ -92,6 +98,22 @@ const char paginaInicial[] PROGMEM = R"=====(
             <input type="number" name="intervaloDeRega" id="intervaloDeRega" value="12" onchange="setSchedule(this.value)">
         </section>
         <script>
+            function toggleDebug(state)
+            {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        document.getElementById("debug").innerHTML = this.responseText;
+                    }
+                };
+                if(state){
+                  xhttp.open("GET", "alternarDebug?debug=true", true);
+                }else{
+                  xhttp.open("GET", "alternarDebug?debug=false", true);
+                }
+                xhttp.send();
+            }
+
             function toggleState(state)
             {
                 var xhttp = new XMLHttpRequest();
