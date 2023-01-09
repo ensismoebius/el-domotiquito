@@ -100,8 +100,11 @@ const char paginaInicial[] PROGMEM = R"=====(
                         document.getElementById("regando").innerHTML = this.responseText;
                     }
                 };
-
-                xhttp.open("GET", "ledToggle?state=" + state, true);
+                if(state){
+                  xhttp.open("GET", "ledToggle?ativacao=true", true);
+                }else{
+                  xhttp.open("GET", "ledToggle?ativacao=false", true);
+                }
                 xhttp.send();
             }
 

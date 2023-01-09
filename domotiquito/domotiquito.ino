@@ -53,6 +53,7 @@ void enviarParaOEsp(Ativacoes ativacao, String dados = "") {
 }
 
 inline void ativar(Ativacoes ativacao, float dados = 0) {
+
   switch (ativacao) {
     case Ativacoes::regar:
       enviarParaOEsp(ativacao);
@@ -135,10 +136,7 @@ void consultarEExecutarAtivacao() {
   if (lerDadosDoEsp(dadosRecebidosDoESP)) {
     char comando = dadosRecebidosDoESP.substring(0, 1)[0];
     float parametros = dadosRecebidosDoESP.substring(1).toFloat();
-
-    Serial.println(comando);
-    Serial.println(parametros);
-
+    
     ativar(comando, parametros);
   }
 }

@@ -13,4 +13,3 @@ enum Ativacoes {
   horas_decorridas = 'd',
   minutos_decorridos = 'e'
 };
-//uga
