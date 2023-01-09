@@ -76,6 +76,10 @@ void sendData(Activations state, String data = "") {
 
 inline void activate(Activations state, float data = 0) {
   switch (state) {
+
+    case Activations::status:
+      break;
+
     case Activations::regar:
       sendData(state);
       horasDecorridas = 0;
@@ -167,11 +171,8 @@ void executeActivation() {
   String expr;
 
   if (leStringSerial(expr)) {
-    char command = expr.substring(0, 1)[0];
-    float params = expr.substring(1).toFloat();
-
-    Serial.println(command);
-    Serial.println(params);
+    static char command = expr.substring(0, 1)[0];
+    static float params = expr.substring(1).toFloat();
 
     activate(command, params);
   }
@@ -179,7 +180,7 @@ void executeActivation() {
 
 void setup() {
   setupSwitchesAndOutputs();
-  activate(Activations::debug_off);
+  activate(Activations::debug_on);
 }
 
 void loop() {

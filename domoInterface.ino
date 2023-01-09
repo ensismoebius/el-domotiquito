@@ -6,22 +6,6 @@
 const char *ssid = "LulaPresidente_ForaCentrao";
 const char *passwd = "@@$UP&R4";
 
-enum Activations {
-  led_ligado = '1',
-  led_desligado = '2',
-  conectando = '3',
-  conectado = '4',
-  regar = '5',
-  esperar = '6',
-  chuva = '7',
-  nao_chuva = '8',
-  atribuir_minutos_de_rega = '9',
-  atribuir_horas_ate_proxima_rega = 'a',
-  finalizador = '\0',
-  debug_on = 'b',
-  debug_off = 'c'
-};
-
 ESP8266WebServer server(80);
 
 void sendData(Activations state, String data = "") {
@@ -64,8 +48,9 @@ void setMinTime() {
   sendData(Activations::atribuir_minutos_de_rega, stateMessage);
 }
 
-void getActivations() {
-  server.send(200, "text/plane", "Regando: 1 Proxima rega: 2h");
+void getStatus() {
+  sendData(Activations::status);
+  server.send(200, "text/plane");
 }
 
 inline void setupSerialOutPut() {
@@ -88,10 +73,10 @@ inline void setupWifi() {
 
 inline void setupWebServer() {
   server.on("/", handleRoot);
+  server.on("/status", getStatus);
   server.on("/ledToggle", setToggle);
   server.on("/interval", setInterval);
   server.on("/mintime", setMinTime);
-  server.on("/Activations", getActivations);
   server.begin();
 }
 
