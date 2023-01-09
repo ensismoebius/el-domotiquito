@@ -123,24 +123,9 @@ void enviarEstadoParaOEsp() {
 }
 
 bool lerDadosDoEsp(String &conteudo) {
-  char caractere;
-
-  // Enquanto receber algo pela serial
-  while (ConexaoComESP.available() > 0) {
-    
-    // Lê byte da ConexaoComESP
-    caractere = ConexaoComESP.read();
-    conteudo.concat(caractere);
-
-    // Para a leitura quando encontrar
-    // um finalizador de string
-    if (caractere != '\0') {
-      break;
-    }
-    // Aguarda buffer ConexaoComESP ler o próximo caractere
-    delay(10);
+  if (ConexaoComESP.available() > 0) {
+    conteudo = ConexaoComESP.readStringUntil('\0');
   }
-
   return conteudo.length() > 0;
 }
 

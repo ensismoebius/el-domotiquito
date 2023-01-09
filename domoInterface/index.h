@@ -57,16 +57,16 @@ const char paginaInicial[] PROGMEM = R"=====(
 
             /* Rounded sliders */
             .slider.round {
-                border-radius: 34px;
+                border-radius: 10px;
             }
 
             .slider.round:before {
-                border-radius: 50%;
+                border-radius: 10px;
             }
 
             input{
                 font-size: 2em;
-                border-radius: 1em;
+                border-radius: 10px;
                 width: 4em;
                 border-width: 0;
             }
