@@ -143,7 +143,7 @@ void consultarEExecutarAtivacao() {
 
 void setup() {
   configurarDispositivosDeSaida();
-  ativar(Ativacoes::debug_off);
+  ativar(Ativacoes::debug_on);
 }
 
 void loop() {
