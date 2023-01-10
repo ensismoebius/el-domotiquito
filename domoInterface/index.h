@@ -79,7 +79,7 @@ const char paginaInicial[] PROGMEM = R"=====(
         <h1>El-Canterito</h1>
         <section>
             <h2>Canteiro</h2>
-            <code id="regando"></code><br/>
+            <code id="status"></code><br/>
             <label>Alternar rega</label><br/>
             <label class="switch">
                 <input type="checkbox" name="ligarRega" onchange="toggleState(this.checked)">
@@ -103,9 +103,9 @@ const char paginaInicial[] PROGMEM = R"=====(
             {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        document.getElementById("debug").innerHTML = this.responseText;
-                    }
+                    // if (this.readyState === 4 && this.status === 200) {
+                    //     document.getElementById("debug").innerHTML = this.responseText;
+                    // }
                 };
                 if(state){
                   xhttp.open("GET", "alternarDebug?debug=true", true);
@@ -119,9 +119,9 @@ const char paginaInicial[] PROGMEM = R"=====(
             {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        document.getElementById("regando").innerHTML = this.responseText;
-                    }
+                    // if (this.readyState === 4 && this.status === 200) {
+                    //     document.getElementById("regando").innerHTML = this.responseText;
+                    // }
                 };
                 if(state){
                   xhttp.open("GET", "ledToggle?ativacao=true", true);
@@ -161,7 +161,7 @@ const char paginaInicial[] PROGMEM = R"=====(
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
-                        document.getElementById("regando").innerHTML =
+                        document.getElementById("status").innerHTML =
                                 this.responseText;
                     }
                 };
