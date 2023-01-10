@@ -159,7 +159,7 @@ void serialEvent() {
   if (Serial.available()) {
     inputString = Serial.readStringUntil('\n');
     stringComplete = true;
-  }
+  } 
 
   if (stringComplete) {
 
