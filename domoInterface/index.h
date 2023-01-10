@@ -79,13 +79,14 @@ const char paginaInicial[] PROGMEM = R"=====(
         <h1>El-Canterito</h1>
         <section>
             <h2>Canteiro</h2>
-            <label><span id="regando">Desligado</span></label><br/>
+            <code id="regando"></code><br/>
+            <label>Alternar rega</label><br/>
             <label class="switch">
                 <input type="checkbox" name="ligarRega" onchange="toggleState(this.checked)">
                 <span class="slider round"></span>
             </label>
             <br/>
-            <label><span id="debug">Sem debug</span></label><br/>
+            <label>Alternar modo debug</label><br/>
             <label class="switch">
                 <input type="checkbox" name="ligaDebug" onchange="toggleDebug(this.checked)">
                 <span class="slider round"></span>

@@ -34,7 +34,11 @@ inline void mostrarInfoDeDebug() {
 
 inline void configurarDispositivosDeSaida() {
   ConexaoComESP.begin(TAXA_DE_TRANSFERENCIA_SERIAL);
+  while (!ConexaoComESP)
+    ;
   Serial.begin(TAXA_DE_TRANSFERENCIA_SERIAL);
+  while (!Serial)
+    ;
   pinMode(LED_BUILTIN, OUTPUT);
   delay(100);
 }
@@ -43,27 +47,26 @@ inline bool estaChovendo() {
   return analogRead(PINO_DO_SENSOR_DE_CHUVA) > NIVEL_LIMITE_DE_UMIDADE ? true : false;
 }
 
-void enviarParaOEsp(Ativacoes ativacao, String dados = "") {
-  if (ConexaoComESP.available()) {
-    ConexaoComESP.write(ativacao);
-    ConexaoComESP.write(dados.c_str());
-    ConexaoComESP.write(FINALIZADOR_DE_STRING);
-    delay(10);
-  }
+void enviarParaOEsp(String dados = "") {
+
+  while (!ConexaoComESP.available()){}
+  ConexaoComESP.write(dados.c_str());
 }
 
 inline void ativar(Ativacoes ativacao, float dados = 0) {
 
   switch (ativacao) {
+    case Ativacoes::status:
+      enviarEstadoParaOEsp();
+      break;
+
     case Ativacoes::regar:
-      enviarParaOEsp(ativacao);
       horasDecorridas = 0;
       esperandoPraRegar = false;
       digitalWrite(LED_BUILTIN, HIGH);
       break;
 
     case Ativacoes::esperar:
-      enviarParaOEsp(ativacao);
       minutosDecorridos = 0;
       esperandoPraRegar = true;
       digitalWrite(LED_BUILTIN, LOW);
@@ -71,7 +74,6 @@ inline void ativar(Ativacoes ativacao, float dados = 0) {
 
     case Ativacoes::chuva:
       if (chovendo == false) {
-        enviarParaOEsp(ativacao);
         chovendo = true;
       }
       if (abs(horasDecorridas) > (horasAteAProximaRega * 60.0 * 60.0 * 1000.0 * 4)) {
@@ -83,28 +85,23 @@ inline void ativar(Ativacoes ativacao, float dados = 0) {
 
     case Ativacoes::nao_chuva:
       if (chovendo == true) {
-        enviarParaOEsp(ativacao);
         chovendo = false;
       }
       break;
 
     case Ativacoes::atribuir_minutos_de_rega:
       minutosDeRega = dados;
-      enviarParaOEsp(ativacao);
       break;
 
     case Ativacoes::atribuir_horas_ate_proxima_rega:
       horasAteAProximaRega = dados;
-      enviarParaOEsp(ativacao);
       break;
 
     case Ativacoes::debug_on:
-      enviarParaOEsp(ativacao);
       debug = true;
       break;
 
     case Ativacoes::debug_off:
-      enviarParaOEsp(ativacao);
       debug = false;
       break;
   }
@@ -112,15 +109,34 @@ inline void ativar(Ativacoes ativacao, float dados = 0) {
 
 void enviarEstadoParaOEsp() {
 
-  enviarParaOEsp(chovendo ? Ativacoes::chuva : Ativacoes::nao_chuva);
-  enviarParaOEsp(debug ? Ativacoes::debug_on : Ativacoes::debug_off);
-  enviarParaOEsp(esperandoPraRegar ? Ativacoes::esperar : Ativacoes::regar);
+  String informacao = "";
 
-  enviarParaOEsp(Ativacoes::atribuir_horas_ate_proxima_rega, String(horasAteAProximaRega));
-  enviarParaOEsp(Ativacoes::horas_decorridas, String(horasDecorridas));
+  informacao.concat(chovendo ? char(Ativacoes::chuva) : char(Ativacoes::nao_chuva));
+  informacao.concat(FINALIZADOR_DE_STRING_PARA_REDE);
 
-  enviarParaOEsp(Ativacoes::atribuir_minutos_de_rega, String(minutosDeRega));
-  enviarParaOEsp(Ativacoes::minutos_decorridos, String(minutosDecorridos));
+  informacao.concat(debug ? char(Ativacoes::debug_on) : char(Ativacoes::debug_off));
+  informacao.concat(FINALIZADOR_DE_STRING_PARA_REDE);
+
+  informacao.concat(esperandoPraRegar ? char(Ativacoes::esperar) : char(Ativacoes::regar));
+  informacao.concat(FINALIZADOR_DE_STRING_PARA_REDE);
+
+  informacao.concat(char(Ativacoes::atribuir_horas_ate_proxima_rega));
+  informacao.concat(String(horasAteAProximaRega));
+  informacao.concat(FINALIZADOR_DE_STRING_PARA_REDE);
+
+  informacao.concat(char(Ativacoes::horas_decorridas));
+  informacao.concat(String(horasDecorridas));
+  informacao.concat(FINALIZADOR_DE_STRING_PARA_REDE);
+
+  informacao.concat(char(Ativacoes::atribuir_minutos_de_rega));
+  informacao.concat(String(minutosDeRega));
+  informacao.concat(FINALIZADOR_DE_STRING_PARA_REDE);
+
+  informacao.concat(char(Ativacoes::minutos_decorridos));
+  informacao.concat(String(minutosDecorridos));
+  informacao.concat('\n');
+
+  enviarParaOEsp(informacao);
 }
 
 bool lerDadosDoEsp(String &conteudo) {
@@ -136,14 +152,14 @@ void consultarEExecutarAtivacao() {
   if (lerDadosDoEsp(dadosRecebidosDoESP)) {
     char comando = dadosRecebidosDoESP.substring(0, 1)[0];
     float parametros = dadosRecebidosDoESP.substring(1).toFloat();
-    
+
     ativar(comando, parametros);
   }
 }
 
 void setup() {
   configurarDispositivosDeSaida();
-  ativar(Ativacoes::debug_on);
+  ativar(Ativacoes::debug_off);
 }
 
 void loop() {
