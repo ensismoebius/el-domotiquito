@@ -14,7 +14,7 @@ void enviarParaOArduino(Ativacoes ativacao, String dados = "") {
   Serial.write(dados.c_str());
   Serial.write(FINALIZADOR_DE_STRING);
 
-  delay(100);
+  delay(10);
 }
 
 void abrirPaginaPrincipal() {

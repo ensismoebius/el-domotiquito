@@ -34,11 +34,11 @@ inline void mostrarInfoDeDebug() {
 
 inline void configurarDispositivosDeSaida() {
   ConexaoComESP.begin(TAXA_DE_TRANSFERENCIA_SERIAL);
-  while (!ConexaoComESP)
-    ;
+  while (!ConexaoComESP) {}
+
   Serial.begin(TAXA_DE_TRANSFERENCIA_SERIAL);
-  while (!Serial)
-    ;
+  while (!Serial) {}
+
   pinMode(LED_BUILTIN, OUTPUT);
   delay(100);
 }
@@ -49,7 +49,7 @@ inline bool estaChovendo() {
 
 void enviarParaOEsp(String dados = "") {
 
-  while (!ConexaoComESP.available()){}
+  while (!ConexaoComESP.available()) {}
   ConexaoComESP.write(dados.c_str());
 }
 
@@ -181,7 +181,7 @@ void loop() {
     ativar(Ativacoes::nao_chuva);
   }
 
-  consultarEExecutarAtivacao();
+  // consultarEExecutarAtivacao();
 
   if (debug) {
     mostrarInfoDeDebug();
