@@ -6,4 +6,4 @@
 #define RX 10
 #define TX 11
 const char *SSID = "LulaPresidente_ForaCentrao";
-const char *PASSWD = "@@$UP&R4";
+const char *PASSWD = "*******";
