@@ -5,5 +5,5 @@
 #define FINALIZADOR_DE_STRING_PARA_REDE '-'
 #define RX 10
 #define TX 11
-const char *SSID = "LulaPresidente_ForaCentrao";
+const char *SSID = "wifiSSID";
 const char *PASSWD = "*******";
